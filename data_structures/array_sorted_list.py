@@ -54,7 +54,7 @@ class ArraySortedList(SortedList[T]):
                 return True
         return False
 
-    def _shuffle_right(self, index: int) -> None:
+    def _shuffle_right(self, index: int) -> None:   
         """ Shuffle items to the right up to a given position. """
         for i in range(len(self), index, -1):
             self.array[i] = self.array[i - 1]

@@ -1,4 +1,5 @@
 from card import Card
+from data_structures.array_sorted_list import ArraySortedList
 from constants import Constants
 
 
@@ -7,6 +8,9 @@ class Player:
     Player class to store the player details
     """
     def __init__(self, name: str, position: int) -> None:
+        self.name = name
+        self.position = position
+        self.hand = ArraySortedList()
         """
         Constructor for the Player class
 
@@ -21,10 +25,11 @@ class Player:
             Best Case Complexity:
             Worst Case Complexity:
         """
-        raise NotImplementedError
+        
 
     def add_card(self, card: Card) -> None:
-        """
+       self.hand.add(card)
+       """
         Method to add a card to the player's hand
 
         Args:
@@ -36,10 +41,11 @@ class Player:
         Complexity:
             Best Case Complexity:
             Worst Case Complexity:
-        """
-        raise NotImplementedError
+        """                                                                                                                         
+        
 
     def play_card(self, index: int) -> Card:
+        return self.hand.delete_at_index
         """
         Method to play a card from the player's hand
 
@@ -53,9 +59,10 @@ class Player:
             Best Case Complexity:
             Worst Case Complexity:
         """
-        raise NotImplementedError
+   
 
     def __len__(self) -> int:
+        return len(self.hand)
         """
         Method to get the number of cards in the player's hand
 
@@ -69,9 +76,9 @@ class Player:
             Best Case Complexity:
             Worst Case Complexity:
         """
-        raise NotImplementedError
-
+        
     def __getitem__(self, index: int) -> Card:
+        return self.hand[index]
         """
         Method to get the card at the given index from the player's hand
 
@@ -85,4 +92,4 @@ class Player:
             Best Case Complexity:
             Worst Case Complexity:
         """
-        raise NotImplementedError
+        

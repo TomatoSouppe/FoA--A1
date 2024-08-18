@@ -35,6 +35,9 @@ class CardLabel(IntEnum):
 
 class Card:
     def __init__(self, color: CardColor, label: CardLabel) -> None:
+        
+        self.color = color
+        self.label = label
         """
         Constructor for the Card class
 
@@ -49,4 +52,4 @@ class Card:
             Best Case Complexity:
             Worst Case Complexity:
         """
-        raise NotImplementedError
+        

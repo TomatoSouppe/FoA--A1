@@ -1,4 +1,6 @@
 from data_structures.referential_array import ArrayR
+from data_structures.stack_adt import ArrayStack
+
 from player import Player
 from card import CardColor, CardLabel, Card
 from random_gen import RandomGen
@@ -10,6 +12,12 @@ class Game:
     Game class to play the game
     """
     def __init__(self) -> None:
+        players = ArrayR(Constants.MAX_PLAYERS)
+        draw_pile = ArrayStack(Constants.DECK_SIZE)
+        discard_pile = ArrayStack(Constants.DECK_SIZE   )
+        current_player = None
+        current_color = None
+        current_label = None
         """
         Constructor for the Game class
 
@@ -23,7 +31,7 @@ class Game:
             Best Case Complexity:
             Worst Case Complexity:
         """
-        raise NotImplementedError
+        return None
 
     def generate_cards(self) -> ArrayR[Card]:
         """
@@ -73,6 +81,31 @@ class Game:
                 return list_of_cards
 
     def initialise_game(self, players: ArrayR[Player]) -> None:
+        self.players = players
+        cards = self.generate_cards()
+        idx = 0
+        for i in range (Constants.NUM_CARDS_AT_INIT):
+            for player in players:
+                player.add_card(cards[idx])
+                idx +=1
+        while idx < len(cards):
+            self.draw_pile.push(cards[idx])
+            idx +=1
+        while True:
+            top_card = self.draw_pile.pop()
+            self.discard_pile.push(top_card)
+            if top_card.label is not CardLabel.SKIP and top_card.label is not CardLabel.REVERSE and top_card.label is not CardLabel.DRAW_TWO and top_card.label is not CardLabel.CRAZY and top_card.label is not CardLabel.DRAW_FOUR:
+                break
+        self.current_color = top_card.color
+        self.current_label = top_card.label
+
+        
+        """Loop through the top of the draw pile
+        do a check to see if the card is a number card
+        if it is, break the loop
+        if not, loop back"""
+
+
         """
         Method to initialise the game
 
