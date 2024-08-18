@@ -10,7 +10,8 @@ class Player:
     def __init__(self, name: str, position: int) -> None:
         self.name = name
         self.position = position
-        self.hand = ArraySortedList()
+        self.hand = ArraySortedList(1)
+        return None
         """
         Constructor for the Player class
 
@@ -29,6 +30,7 @@ class Player:
 
     def add_card(self, card: Card) -> None:
        self.hand.add(card)
+       return None
        """
         Method to add a card to the player's hand
 
@@ -45,7 +47,7 @@ class Player:
         
 
     def play_card(self, index: int) -> Card:
-        return self.hand.delete_at_index
+        return self.hand.delete_at_index(index)
         """
         Method to play a card from the player's hand
 

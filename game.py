@@ -1,6 +1,6 @@
 from data_structures.referential_array import ArrayR
 from data_structures.stack_adt import ArrayStack
-
+from data_structures.queue_adt import CircularQueue
 from player import Player
 from card import CardColor, CardLabel, Card
 from random_gen import RandomGen
@@ -11,13 +11,14 @@ class Game:
     """
     Game class to play the game
     """
+
     def __init__(self) -> None:
-        players = ArrayR(Constants.MAX_PLAYERS)
-        draw_pile = ArrayStack(Constants.DECK_SIZE)
-        discard_pile = ArrayStack(Constants.DECK_SIZE   )
-        current_player = None
-        current_color = None
-        current_label = None
+        self.players = CircularQueue(Constants.MAX_PLAYERS)
+        self.draw_pile = ArrayStack(Constants.DECK_SIZE)
+        self.discard_pile = ArrayStack(Constants.DECK_SIZE)
+        self.current_player = None
+        self.current_color = None
+        self.current_label = None
         """
         Constructor for the Game class
 
@@ -81,30 +82,30 @@ class Game:
                 return list_of_cards
 
     def initialise_game(self, players: ArrayR[Player]) -> None:
-        self.players = players
+        for player in players:
+            self.players.append(player)
         cards = self.generate_cards()
         idx = 0
-        for i in range (Constants.NUM_CARDS_AT_INIT):
+        for i in range(Constants.NUM_CARDS_AT_INIT):
             for player in players:
                 player.add_card(cards[idx])
-                idx +=1
+                idx += 1
         while idx < len(cards):
             self.draw_pile.push(cards[idx])
-            idx +=1
+            idx += 1
         while True:
             top_card = self.draw_pile.pop()
             self.discard_pile.push(top_card)
-            if top_card.label is not CardLabel.SKIP and top_card.label is not CardLabel.REVERSE and top_card.label is not CardLabel.DRAW_TWO and top_card.label is not CardLabel.CRAZY and top_card.label is not CardLabel.DRAW_FOUR:
+            if (
+                top_card.label is not CardLabel.SKIP
+                and top_card.label is not CardLabel.REVERSE
+                and top_card.label is not CardLabel.DRAW_TWO
+                and top_card.label is not CardLabel.CRAZY
+                and top_card.label is not CardLabel.DRAW_FOUR
+            ):
                 break
         self.current_color = top_card.color
         self.current_label = top_card.label
-
-        
-        """Loop through the top of the draw pile
-        do a check to see if the card is a number card
-        if it is, break the loop
-        if not, loop back"""
-
 
         """
         Method to initialise the game
@@ -119,7 +120,6 @@ class Game:
             Best Case Complexity:
             Worst Case Complexity:
         """
-        raise NotImplementedError
 
     def crazy_play(self, card: Card) -> None:
         """
@@ -135,7 +135,13 @@ class Game:
             Best Case Complexity:
             Worst Case Complexity:
         """
-        raise NotImplementedError
+        self.current_color = CardColor(RandomGen.randint(0, 3))
+        if card.label == CardLabel.DRAW_FOUR:
+            self.next_player()
+            for i in range(4):
+                self.draw_card(self.next_player(), False)
+
+        return None
 
     def play_reverse(self) -> None:
         """
@@ -151,7 +157,12 @@ class Game:
             Best Case Complexity:
             Worst Case Complexity:
         """
-        raise NotImplementedError
+        reverse_stack = ArrayStack(len(self.players))
+        while not self.players.is_empty():
+            reverse_stack.push(self.players.serve())
+        while not reverse_stack.is_empty():
+            self.players.append(reverse_stack.pop())
+        return None
 
     def play_skip(self) -> None:
         """
@@ -167,7 +178,9 @@ class Game:
             Best Case Complexity:
             Worst Case Complexity:
         """
-        raise NotImplementedError
+        skip = self.players.serve()
+        self.players.append(skip)
+        return None
 
     def draw_card(self, player: Player, playing: bool) -> Card | None:
         """
@@ -184,7 +197,18 @@ class Game:
             Best Case Complexity:
             Worst Case Complexity:
         """
-        raise NotImplementedError
+        drawn_card = self.draw_pile.pop()
+
+        if playing == True and (
+            drawn_card.color == self.current_color
+            or drawn_card.label == self.current_label
+            or drawn_card.label == CardLabel.CRAZY
+            or drawn_card.label == CardLabel.DRAW_FOUR
+        ):
+            return drawn_card
+
+        player.add_card(drawn_card)
+        return None
 
     def next_player(self) -> Player:
         """
@@ -200,7 +224,8 @@ class Game:
             Best Case Complexity:
             Worst Case Complexity:
         """
-        raise NotImplementedError
+        next_player = self.players.peek()
+        return next_player
 
     def play_game(self) -> Player:
         """
@@ -216,7 +241,8 @@ class Game:
             Best Case Complexity:
             Worst Case Complexity:
         """
-        raise NotImplementedError
+        winner = False
+        while winner == False:
 
 
 def test_case():

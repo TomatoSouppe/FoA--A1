@@ -38,6 +38,27 @@ class Card:
         
         self.color = color
         self.label = label
+    
+    def __lt__(self, other):
+        if self.color < other.color:
+            return True
+        elif self.color > other.color:
+            return False
+        elif self.label < other.label:
+            return True
+        else:
+            return False
+    
+    def __le__(self, other):
+        if self.color <= other.color:
+            return True
+        elif self.color > other.color:
+            return False
+        elif self.label <= other.label:
+            return True
+        else:
+            return False
+        
         """
         Constructor for the Card class
 
