@@ -137,7 +137,6 @@ class Game:
         """
         self.current_color = CardColor(RandomGen.randint(0, 3))
         if card.label == CardLabel.DRAW_FOUR:
-            self.next_player()
             for i in range(4):
                 self.draw_card(self.next_player(), False)
 
@@ -199,12 +198,25 @@ class Game:
         """
         drawn_card = self.draw_pile.pop()
 
+        if self.draw_pile.is_empty():
+            last_card = self.discard_pile.pop()
+            temp_array = ArrayStack(Constants.DECK_SIZE)
+            for card in self.discard_pile:
+                temp_array.push(self.discard_pile.pop())
+                RandomGen.random_shuffle(temp_array)
+            for card in temp_array:
+                self.draw_pile.push(temp_array.pop())
+            self.discard_pile.push(last_card)
+
         if playing == True and (
             drawn_card.color == self.current_color
             or drawn_card.label == self.current_label
             or drawn_card.label == CardLabel.CRAZY
             or drawn_card.label == CardLabel.DRAW_FOUR
         ):
+            #     self.current_color = drawn_card.color
+            #     self.current_label = drawn_card.label
+            print("placed", drawn_card)
             return drawn_card
 
         player.add_card(drawn_card)
@@ -241,8 +253,59 @@ class Game:
             Best Case Complexity:
             Worst Case Complexity:
         """
-        winner = False
-        while winner == False:
+        while True:
+            self.current_player = self.players.serve()
+
+            played = False
+            card_being_played = None
+            idx = 0
+            print(self.current_player.name)
+            print(self.current_player.hand)
+            for card in self.current_player.hand:
+                print("color, label", card.color, card.label)
+                # print("label", card.label)
+
+                if (
+                    card.color == self.current_color
+                    or card.label == self.current_label
+                    or card.label == CardLabel.CRAZY
+                    or card.label == CardLabel.DRAW_FOUR
+                ):
+                    played = True
+                    card_being_played = card
+                    idx = self.current_player.hand.index(card_being_played)
+                    self.current_player.play_card(idx)
+                    print("played this", card_being_played)
+                    break
+
+            if played == False:
+                print("drew a card")
+                card_being_played = self.draw_card(self.current_player, True)
+                if card_being_played != None:
+                    played = True
+
+            if played == True:
+                self.discard_pile.push(card_being_played)
+                self.current_color = card_being_played.color
+                self.current_label = card_being_played.label
+                if card.label == CardLabel.REVERSE:
+                    self.play_reverse()
+                elif card.label == CardLabel.SKIP:
+                    self.play_skip()
+                elif card.label == CardLabel.DRAW_FOUR:
+                    self.crazy_play(card_being_played)
+                    self.play_skip()
+                elif card.label == CardLabel.CRAZY:
+                    self.crazy_play(card_being_played)
+                elif card.label == CardLabel.DRAW_TWO:
+                    for i in range(2):
+                        self.draw_card(self.next_player(), False)
+                    self.play_skip()
+
+            if self.current_player.hand.is_empty == True:
+                return self.current_player
+
+            self.players.append(self.current_player)
 
 
 def test_case():
@@ -257,5 +320,5 @@ def test_case():
     print(f"Winner is {winner.name}")
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     test_case()

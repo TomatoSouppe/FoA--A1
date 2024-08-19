@@ -5,6 +5,7 @@ class CardColor(IntEnum):
     """
     Enum class for the color of the card
     """
+
     RED = 0
     BLUE = auto()
     GREEN = auto()
@@ -16,6 +17,7 @@ class CardLabel(IntEnum):
     """
     Enum class for the value of the card
     """
+
     ZERO = 0
     ONE = auto()
     TWO = auto()
@@ -35,10 +37,10 @@ class CardLabel(IntEnum):
 
 class Card:
     def __init__(self, color: CardColor, label: CardLabel) -> None:
-        
+
         self.color = color
         self.label = label
-    
+
     def __lt__(self, other):
         if self.color < other.color:
             return True
@@ -48,7 +50,7 @@ class Card:
             return True
         else:
             return False
-    
+
     def __le__(self, other):
         if self.color <= other.color:
             return True
@@ -58,7 +60,7 @@ class Card:
             return True
         else:
             return False
-        
+
         """
         Constructor for the Card class
 
@@ -73,4 +75,3 @@ class Card:
             Best Case Complexity:
             Worst Case Complexity:
         """
-        

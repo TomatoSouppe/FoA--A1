@@ -7,10 +7,11 @@ class Player:
     """
     Player class to store the player details
     """
+
     def __init__(self, name: str, position: int) -> None:
         self.name = name
         self.position = position
-        self.hand = ArraySortedList(1)
+        self.hand = ArraySortedList(Constants.NUM_CARDS_AT_INIT)
         return None
         """
         Constructor for the Player class
@@ -26,12 +27,11 @@ class Player:
             Best Case Complexity:
             Worst Case Complexity:
         """
-        
 
     def add_card(self, card: Card) -> None:
-       self.hand.add(card)
-       return None
-       """
+        self.hand.add(card)
+        return None
+        """
         Method to add a card to the player's hand
 
         Args:
@@ -43,8 +43,7 @@ class Player:
         Complexity:
             Best Case Complexity:
             Worst Case Complexity:
-        """                                                                                                                         
-        
+        """
 
     def play_card(self, index: int) -> Card:
         return self.hand.delete_at_index(index)
@@ -61,7 +60,6 @@ class Player:
             Best Case Complexity:
             Worst Case Complexity:
         """
-   
 
     def __len__(self) -> int:
         return len(self.hand)
@@ -78,7 +76,7 @@ class Player:
             Best Case Complexity:
             Worst Case Complexity:
         """
-        
+
     def __getitem__(self, index: int) -> Card:
         return self.hand[index]
         """
@@ -94,4 +92,3 @@ class Player:
             Best Case Complexity:
             Worst Case Complexity:
         """
-        
